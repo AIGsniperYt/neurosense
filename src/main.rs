@@ -30,6 +30,13 @@ fn find_mds(dir: &Path) {
         // if its an err, skip this iteration and silently ignore 
         if let Ok(entry) = raw_entry {
 
+            // if it is a directory, recurse immediately, and move onto the next entry
+            if path.is_dir() {
+                find_mds(&path);
+                // move on, dont check further
+                continue;
+            }
+
             // if the program survives this far, we know that we have a clean DirEntry struct!
             // we want its path for its filetype so lets get it, we can do anything to "path" and "entry" now!
             let path = entry.path(); // the raw path looks like a normal literal string "/home" etc, see in debug mode by printing with {:?}
@@ -40,11 +47,6 @@ fn find_mds(dir: &Path) {
                         println!("{}", path.display()); // .display() strips the "" into clean human readable paths to look at! :)
                     }
                 }
-            }
-
-            // 5. recursion, only if its a directory, call this function again on itself
-            if path.is_dir() {
-                find_mds(&path);
             }
 
         }
