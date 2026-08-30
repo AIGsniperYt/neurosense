@@ -22,6 +22,11 @@ fn find_mds(dir: &Path) {
         Ok(entries) => entries, // if ok (success), the match's value is "entries"
         Err(_) => return, // if there is an error (permission denied/doesnt exist) silently ignore - do nothing
     };
+
+    // this is a cleaner way to write the above code
+    // if the raw_entries looks like an Ok(), pull it out into an "entries" variable (if it lets me assign this)
+    if let Ok(entries) = fs::read_dir(dir) else { return }; // silently ignore errors, only filter the Ok() Results
+
     println!("{:?}", entries);  // entry is io::Result<DirEntry>
 
     // Print each item the iterator produces
